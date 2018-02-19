@@ -20,10 +20,10 @@ $( '#title' ).change(function() {
 //displaing the color options that match the design selected in the "Design" menu.
 $('#design').change(function(){
 
-  if($(this).val() === 'Select Theme'){
+  if($(this).val() === 'Select Theme'){//hiding the color options if Select Theme has been selected.
     $('#color').hide();
   }
-   else if($(this).val() === 'js puns'){
+   else if($(this).val() === 'js puns'){// showing the relevant colors for js puns , when js puns is selected.
       $('#color option').remove();
       let selectElement = $('<select/>');
       selectElement.attr('id','color');
@@ -40,7 +40,7 @@ $('#design').change(function(){
       $('#color').show();
 
     }
-    else if ($(this).val() === 'heart js') {
+    else if ($(this).val() === 'heart js') {// showing the relevant colors for heart js , when jheart js is selected.
       $('#color option').remove();
       let tomato = $('<option/>');
       tomato.attr({ 'value': 'tomato' }).text('Tomato');
@@ -84,7 +84,7 @@ $('.activities input').change(function(){
   let checkedBox = ($(this)[0].checked);//creating a variable to hold checked boxes.
   let activities = $('.activities input');//creating a variable to hold the array of activities.
 
-//cheking for overlapping activities and if there are any, making sure that the boxes for the ones overlapping are disbled.
+//checking for overlapping activities and if there are any, making sure that the boxes for the ones overlapping are disbled.
   if ($(this)[0].name === 'js-libs' && checkedBox) {
     activities[4].disabled = true;
 	} else if ($(this)[0].name === 'js-libs' && !checkedBox) {
