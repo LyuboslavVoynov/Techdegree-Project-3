@@ -10,7 +10,8 @@ $(function() {
 
 //Text field that will be revealed when the "Other" option is selected from the "Job Role" drop down menu.
 $( '#title' ).change(function() {
-  if($(this).val() === 'other'){
+  let $jobRole = $(this).val();
+  if($jobRole === 'other'){
     let otherTextField = "<input type='text' id='other-title' placeholder='Your Job Role'>";
     $('fieldset:first-of-type').append(otherTextField);
   }else {
@@ -19,11 +20,11 @@ $( '#title' ).change(function() {
 });
 //displaing the color options that match the design selected in the "Design" menu.
 $('#design').change(function(){
-
-  if($(this).val() === 'Select Theme'){//hiding the color options if Select Theme has been selected.
+  let $themeValue = $(this).val();
+  if($themeValue === 'Select Theme'){//hiding the color options if Select Theme has been selected.
     $('#color').hide();
   }
-   else if($(this).val() === 'js puns'){// showing the relevant colors for js puns , when js puns is selected.
+   else if($themeValue === 'js puns'){// showing the relevant colors for js puns , when js puns is selected.
       $('#color option').remove();
       let selectElement = $('<select/>');
       selectElement.attr('id','color');
@@ -40,7 +41,7 @@ $('#design').change(function(){
       $('#color').show();
 
     }
-    else if ($(this).val() === 'heart js') {// showing the relevant colors for heart js , when jheart js is selected.
+    else if ($themeValue === 'heart js') {// showing the relevant colors for heart js , when jheart js is selected.
       $('#color option').remove();
       let tomato = $('<option/>');
       tomato.attr({ 'value': 'tomato' }).text('Tomato');
@@ -59,14 +60,16 @@ $('#design').change(function(){
 //As the user selects activities, a running total displays below the list of checkboxes.
 let total = 0;
 $('.activities input').change(function(){
-  if ( $(this)[0].checked){//using zero index to capture the selected checkbox and checking if checked.
-    if( $(this)[0].name === "all"){
+  let $checkedBox = ($(this)[0].checked);//creating a variable to hold checked boxes.
+  let $chekedBoxName = ($(this)[0].name);//creating a variable to hold checked boxes names.
+  if ($checkedBox){
+    if($chekedBoxName === "all"){
       total += 200;
     }else{
       total += 100;
     }
-  }else if(!$(this)[0].checked){
-    if($(this)[0].name === "all"){
+  }else if(!$checkedBox){
+    if($chekedBoxName === "all"){
       total -= 200;
     }else{
       total -= 100;
@@ -81,30 +84,39 @@ $('.activities input').change(function(){
 
 //making sure the user can not select overlapping activities.
 $('.activities input').change(function(){
-  let checkedBox = ($(this)[0].checked);//creating a variable to hold checked boxes.
-  let chekedBoxName = ($(this)[0].name);//creating a variable to hold checked boxes names.
-  let activities = $('.activities input');//creating a variable to hold the array of activities.
+  let $checkedBox = ($(this)[0].checked);//creating a variable to hold checked boxes.
+  let $chekedBoxName = ($(this)[0].name);//creating a variable to hold checked boxes names.
+  let $activities = $('.activities input');//creating a variable to hold the array of activities.
 
 //checking for overlapping activities and if there are any, making sure that the boxes for the ones overlapping are disbled.
-  if (chekedBoxName === 'js-libs' && checkedBox) {
-    activities[4].disabled = true;
-	} else if (chekedBoxName === 'js-libs' && !checkedBox) {
-		activities[4].disabled = false;
+  if ($chekedBoxName === 'js-libs' && $checkedBox) {
+    disableCheckBox($activities[4]);
+	} else if ($chekedBoxName === 'js-libs' && !$checkedBox) {
+		enableCheckBox($activities[4]);
 
-	} else if (chekedBoxName=== 'node' && checkedBox) {
-		activities[2].disabled = true;
-	} else if (chekedBoxName === 'node' && !checkedBox) {
-		activities[2].disabled = false;
+	} else if ($chekedBoxName=== 'node' && $checkedBox) {
+		disableCheckBox($activities[2]);
+	} else if ($chekedBoxName === 'node' && !$checkedBox) {
+		enableCheckBox($activities[2]);
 
-	} else if (chekedBoxName === 'js-frameworks' && checkedBox) {
-		activities[3].disabled = true;
-	} else if (chekedBoxName === 'js-frameworks' && !checkedBox) {
-		activities[3].disabled = false;
+	} else if ($chekedBoxName === 'js-frameworks' && $checkedBox) {
+		disableCheckBox($activities[3]);
+	} else if ($chekedBoxName === 'js-frameworks' && !$checkedBox) {
+		enableCheckBox($activities[3]);
 
-	} else if (chekedBoxName=== 'express' && checkedBox) {
-		activities[1].disabled = true;
-	} else if (chekedBoxName === 'express' && !checkedBox) {
-		activities[1].disabled = false;
+	} else if ($chekedBoxName=== 'express' && $checkedBox) {
+		disableCheckBox$(activities[1]);
+	} else if ($chekedBoxName === 'express' && !$checkedBox) {
+		enableCheckBox($activities[1]);
 	}
 
 });
+
+//disable check box function
+function disableCheckBox($activities){
+  $activities.disabled = true;
+};
+//enable check box function
+function enableCheckBox($activities){
+  $activities.disabled = false;
+};
