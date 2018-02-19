@@ -82,27 +82,28 @@ $('.activities input').change(function(){
 //making sure the user can not select overlapping activities.
 $('.activities input').change(function(){
   let checkedBox = ($(this)[0].checked);//creating a variable to hold checked boxes.
+  let chekedBoxName = ($(this)[0].name);//creating a variable to hold checked boxes names.
   let activities = $('.activities input');//creating a variable to hold the array of activities.
 
 //checking for overlapping activities and if there are any, making sure that the boxes for the ones overlapping are disbled.
-  if ($(this)[0].name === 'js-libs' && checkedBox) {
+  if (chekedBoxName === 'js-libs' && checkedBox) {
     activities[4].disabled = true;
-	} else if ($(this)[0].name === 'js-libs' && !checkedBox) {
+	} else if (chekedBoxName === 'js-libs' && !checkedBox) {
 		activities[4].disabled = false;
 
-	} else if ($(this)[0].name === 'node' && checkedBox) {
+	} else if (chekedBoxName=== 'node' && checkedBox) {
 		activities[2].disabled = true;
-	} else if ($(this)[0].name === 'node' && !checkedBox) {
+	} else if (chekedBoxName === 'node' && !checkedBox) {
 		activities[2].disabled = false;
 
-	} else if ($(this)['0'].name === 'js-frameworks' && checkedBox) {
+	} else if (chekedBoxName === 'js-frameworks' && checkedBox) {
 		activities[3].disabled = true;
-	} else if ($(this)['0'].name === 'js-frameworks' && !checkedBox) {
+	} else if (chekedBoxName === 'js-frameworks' && !checkedBox) {
 		activities[3].disabled = false;
 
-	} else if ($(this)['0'].name === 'express' && checkedBox) {
+	} else if (chekedBoxName=== 'express' && checkedBox) {
 		activities[1].disabled = true;
-	} else if ($(this)['0'].name === 'express' && !checkedBox) {
+	} else if (chekedBoxName === 'express' && !checkedBox) {
 		activities[1].disabled = false;
 	}
 
