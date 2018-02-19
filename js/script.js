@@ -1,5 +1,5 @@
 
-//still working on it
+//still working on it, trying to use jQuery for this project
 
 
 // gives focus to the first text field,when the page loads
