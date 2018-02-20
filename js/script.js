@@ -165,7 +165,7 @@ $('#payment').change(function(){
       $bitCoinP.hide()
       $creditCardP.hide();
 
-  } else if($selectedMethod === 'bitcoin'){
+  } else{
       $bitCoinP.show();
       $creditCardP.hide();
       $payPalP.hide();
