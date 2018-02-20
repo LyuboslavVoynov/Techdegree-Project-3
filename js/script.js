@@ -1,61 +1,73 @@
 
 //still working on it, trying to use jQuery for this project
 
-
+//BASIC INFO
 // gives focus to the first text field,when the page loads
 $(function() {
   $("#name").focus();
 });
-
-
+//hiding the 'other job role' text field(I created it in the html file, in case of js being disabled the text field will still show up)
+$('#other-title').hide()
 //Text field that will be revealed when the "Other" option is selected from the "Job Role" drop down menu.
 $( '#title' ).change(function() {
   let $jobRole = $(this).val();
   if($jobRole === 'other'){
-    let otherTextField = "<input type='text' id='other-title' placeholder='Your Job Role'>";
-    $('fieldset:first-of-type').append(otherTextField);
+    $('#other-title').show()
   }else {
-    $('#other-title').remove();
+    $('#other-title').hide();
   }
 });
+
+//T-SHIRT INFO
 //displaing the color options that match the design selected in the "Design" menu.
 $('#design').change(function(){
   let $themeValue = $(this).val();
-  if($themeValue === 'Select Theme'){//hiding the color options if Select Theme has been selected.
-    $('#color').hide();
-  }
-   else if($themeValue === 'js puns'){// showing the relevant colors for js puns , when js puns is selected.
-      $('#color option').remove();
-      let selectElement = $('<select/>');
-      selectElement.attr('id','color');
-      let cornflowerblue = $('<option/>');
-      cornflowerblue.attr({ 'value': 'cornflowerblue' }).text('Cornflower Blue');
-      let darkslategrey = $('<option/>');
-      darkslategrey.attr({ 'value': 'darkslategrey' }).text('Dark Slate Grey');
-      let gold = $('<option/>');
-      gold.attr({ 'value': 'gold' }).text('Gold');
+  // creating variables to hold the colors
+  let $cornflowerblue = $("#color option[value='cornflowerblue']");
+  let $darkslategrey = $("#color option[value='darkslategrey']");
+  let $gold = $("#color option[value='gold']");
+  let $tomato =  $("#color option[value='tomato']");
+  let $steelblue = $("#color option[value='steelblue']");
+  let $dimgrey = $("#color option[value='dimgrey']");
 
-      $('#color').append(cornflowerblue)
-                 .append(darkslategrey)
-                 .append(gold);
-      $('#color').show();
+  if($themeValue === 'Select Theme'){
+     //showing all the colors when 'Select Theme' is selected
+      $cornflowerblue.prop("selected",true);
+      $cornflowerblue.show();
+      $darkslategrey.show();
+      $gold.show();
 
-    }
-    else if ($themeValue === 'heart js') {// showing the relevant colors for heart js , when jheart js is selected.
-      $('#color option').remove();
-      let tomato = $('<option/>');
-      tomato.attr({ 'value': 'tomato' }).text('Tomato');
-      let steelblue = $('<option/>');
-      steelblue.attr({ 'value': 'steelblue' }).text('Steel Blue');
-      let dimgrey = $('<option/>');
-      dimgrey.attr({ 'value': 'gold' }).text('Dimgrey');
-      $('#color').append(tomato)
-                 .append(steelblue)
-                 .append(dimgrey);
-      $('#color').show();
+      $tomato.show();
+      $steelblue.show();
+      $dimgrey.show();
+
+    } else if($themeValue === 'js puns'){
+      // showing the relevant colors for js puns , when js puns is selected, hiding the rest
+        $cornflowerblue.prop("selected",true); //cornflowerblue color is selected by default
+        $cornflowerblue.show();
+        $darkslategrey.show();
+        $gold.show();
+
+        $tomato.hide();
+        $steelblue.hide();
+        $dimgrey.hide();
+
+    } else if ($themeValue === 'heart js') {
+      // showing the relevant colors for heart js , when jheart js is selected, hiding the rest
+         $tomato.prop("selected",true); // tomato color is selected by default
+         $cornflowerblue.hide();
+         $darkslategrey.hide();
+         $gold.hide();
+
+         $tomato.show();
+         $steelblue.show();
+         $dimgrey.show();
+
     }
 
   });
+
+//REGISTER FOR ACTIVITIES
 
 //As the user selects activities, a running total displays below the list of checkboxes.
 let total = 0;
@@ -120,3 +132,43 @@ function disableCheckBox($activities){
 function enableCheckBox($activities){
   $activities.disabled = false;
 };
+
+
+//PAYMENT INFO
+//creating variables
+let $creditCard = $("#payment option[value='credit card']");
+let $creditCardP = $("#credit-card");
+let $payPalP = $('div p:first');
+let $bitCoinP = $('div p:last');
+//selecting credit card payment as default
+$creditCard.prop("selected",true);
+//hiding bitcoin and PayPal texts
+$payPalP.hide();
+$bitCoinP.hide();
+
+//displaing the relevant information acording to the payment method option
+$('#payment').change(function(){
+  $selectedMethod = $(this).val();//creating a variable to hold the value of the selected payment method
+
+  if($selectedMethod === 'select_method'){
+    $creditCardP.show();
+    $payPalP.hide();
+    $bitCoinP.hide();
+
+  } else if($selectedMethod === 'credit card'){
+      $creditCardP.show();
+      $payPalP.hide();
+      $bitCoinP.hide();
+
+  } else if($selectedMethod === 'paypal'){
+      $payPalP.show();
+      $bitCoinP.hide()
+      $creditCardP.hide();
+
+  } else if($selectedMethod === 'bitcoin'){
+      $bitCoinP.show();
+      $creditCardP.hide();
+      $payPalP.hide();
+  }
+
+});
