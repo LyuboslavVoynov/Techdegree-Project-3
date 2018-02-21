@@ -1,24 +1,41 @@
 
 //still working on it, trying to use jQuery for this project
+//creating constants
+const $name = $('#name');//name
+const $email = $('#mail');//email
+const $otherTitle = $('#other-title');//other job field
+const $creditCard = $("#payment option[value='credit card']");//credit card
+const $creditCardP = $("#credit-card");//credit card text field
+const $payPalP = $('div p:first');//paypal paragraph
+const $bitCoinP = $('div p:last');//bitcoin paragraph
+const $payInfo = $('#cc-num,#zip,#cvv');//cc num, zip, cvv text fields
+const $activities = $('.activities input');//creating a variable for the activities from the checkboxes.
+const $colors = $("#colors-js-puns");// color options
+const $payVal = $("#payment");//payment options
 
 //BASIC INFO
 // gives focus to the first text field,when the page loads
 $(function() {
-  $("#name").focus();
+  $name.focus();
 });
+
 //hiding the 'other job role' text field(I created it in the html file, in case of js being disabled the text field will still show up)
-$('#other-title').hide()
+$otherTitle.hide()
 //Text field that will be revealed when the "Other" option is selected from the "Job Role" drop down menu.
-$( '#title' ).change(function() {
+
+$('#title').change(function() {
+  attrNotReq($otherTitle);//other title field not required
   let $jobRole = $(this).val();
   if($jobRole === 'other'){
-    $('#other-title').show()
+    $otherTitle.show()
+    attrReq($otherTitle);//setting the other title field as required
   }else {
-    $('#other-title').hide();
+    $otherTitle.hide(); //hiding other title field
   }
 });
 
 //T-SHIRT INFO
+$colors.hide();//hiding the color options
 //displaing the color options that match the design selected in the "Design" menu.
 $('#design').change(function(){
   let $themeValue = $(this).val();
@@ -30,20 +47,16 @@ $('#design').change(function(){
   let $steelblue = $("#color option[value='steelblue']");
   let $dimgrey = $("#color option[value='dimgrey']");
 
+
+
   if($themeValue === 'Select Theme'){
      //showing all the colors when 'Select Theme' is selected
-      $cornflowerblue.prop("selected",true);
-      $cornflowerblue.show();
-      $darkslategrey.show();
-      $gold.show();
-
-      $tomato.show();
-      $steelblue.show();
-      $dimgrey.show();
+      $colors.hide();
 
     } else if($themeValue === 'js puns'){
       // showing the relevant colors for js puns , when js puns is selected, hiding the rest
-        $cornflowerblue.prop("selected",true); //cornflowerblue color is selected by default
+        $colors.show();
+        colorSelected($cornflowerblue); //cornflowerblue color is selected by default
         $cornflowerblue.show();
         $darkslategrey.show();
         $gold.show();
@@ -54,7 +67,8 @@ $('#design').change(function(){
 
     } else if ($themeValue === 'heart js') {
       // showing the relevant colors for heart js , when jheart js is selected, hiding the rest
-         $tomato.prop("selected",true); // tomato color is selected by default
+         $colors.show();
+         colorSelected($tomato); // tomato color is selected by default
          $cornflowerblue.hide();
          $darkslategrey.hide();
          $gold.hide();
@@ -66,12 +80,15 @@ $('#design').change(function(){
     }
 
   });
+  function colorSelected(color){
+    color.prop("selected",true);
+  }
 
 //REGISTER FOR ACTIVITIES
 
 //As the user selects activities, a running total displays below the list of checkboxes.
 let total = 0;
-$('.activities input').change(function(){
+$activities.change(function(){
   let $checkedBox = ($(this)[0].checked);//creating a variable to hold checked boxes.
   let $chekedBoxName = ($(this)[0].name);//creating a variable to hold checked boxes names.
   if ($checkedBox){
@@ -95,10 +112,10 @@ $('.activities input').change(function(){
 });
 
 //making sure the user can not select overlapping activities.
-$('.activities input').change(function(){
+$activities.change(function(){
   let $checkedBox = ($(this)[0].checked);//creating a variable to hold checked boxes.
   let $chekedBoxName = ($(this)[0].name);//creating a variable to hold checked boxes names.
-  let $activities = $('.activities input');//creating a variable to hold the array of activities.
+
 
 //checking for overlapping activities and if there are any, making sure that the boxes for the ones overlapping are disbled.
   if ($chekedBoxName === 'js-libs' && $checkedBox) {
@@ -117,7 +134,7 @@ $('.activities input').change(function(){
 		enableCheckBox($activities[3]);
 
 	} else if ($chekedBoxName=== 'express' && $checkedBox) {
-		disableCheckBox$(activities[1]);
+		disableCheckBox($activities[1]);
 	} else if ($chekedBoxName === 'express' && !$checkedBox) {
 		enableCheckBox($activities[1]);
 	}
@@ -135,11 +152,7 @@ function enableCheckBox($activities){
 
 
 //PAYMENT INFO
-//creating variables
-let $creditCard = $("#payment option[value='credit card']");
-let $creditCardP = $("#credit-card");
-let $payPalP = $('div p:first');
-let $bitCoinP = $('div p:last');
+
 //selecting credit card payment as default
 $creditCard.prop("selected",true);
 //hiding bitcoin and PayPal texts
@@ -147,28 +160,121 @@ $payPalP.hide();
 $bitCoinP.hide();
 
 //displaing the relevant information acording to the payment method option
-$('#payment').change(function(){
+$payVal.change(function(){
   $selectedMethod = $(this).val();//creating a variable to hold the value of the selected payment method
 
   if($selectedMethod === 'select_method'){
-    $creditCardP.show();
+
+    $creditCardP.hide();
     $payPalP.hide();
     $bitCoinP.hide();
 
   } else if($selectedMethod === 'credit card'){
+
       $creditCardP.show();
       $payPalP.hide();
       $bitCoinP.hide();
 
   } else if($selectedMethod === 'paypal'){
+
       $payPalP.show();
       $bitCoinP.hide()
       $creditCardP.hide();
 
-  } else{
+  } else {
+
       $bitCoinP.show();
       $creditCardP.hide();
       $payPalP.hide();
   }
 
 });
+
+//submit event handler
+$('button[type=submit]').click(function(){
+    isValid(event);
+});
+
+//creating a function to check if all information is valid
+function isValid(event){
+
+ // form valid by default
+  let invalid = false;
+  //resetting page styles
+  validStyle($email);
+  validStyle($name);
+  validStyle($activities);
+  validStyle($payInfo);
+
+  if (!isNameEntered($name)) {
+      invalidStyle($name);
+  		invalid = true;
+
+
+	}
+	if (!isMailValid($email)) {
+      invalidStyle($email);
+  		invalid = true;
+	}
+  if (!activitySelected()){
+      invalidStyle($activities);
+      invalid = true;
+  }
+  if ($payVal.val() === '"select_method"'){
+      invalid = true;
+  }
+  if (($payVal.val() === "credit card") && !isCcardValid()){
+      invalidStyle($payInfo);
+      invalid = true;
+  }
+  if (invalid){
+      event.preventDefault();
+      $(window).scrollTop($('.container'));
+
+  }
+
+};
+
+//input invalid  css styles
+function invalidStyle(arg){
+  return arg.css("box-shadow", "0 0 5px 1px red");
+}
+//input valid css styles
+function validStyle(arg){
+  return arg.css('box-shadow', '');
+}
+
+//FORM VALIDATION CHECK FUNCTIONS
+
+//checks if name field is not empty
+function isNameEntered($name) {
+	return ($name.val() !== "") ? true : false;
+}
+
+//checks if the email is in the corect format
+function isMailValid($email){
+  let validMail = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return validMail.test($email.val());//returns true if valid ,false otherwise
+};
+
+//checks if any activity has been selected
+function activitySelected() {
+	let activitiesNum = 0;
+  for (let i=0;i<$activities.length;i++){
+    if ($activities[i].checked){
+      activitiesNum+=1;
+    }
+  }
+	return (activitiesNum>0) ? true:false;//returns true if valid ,false otherwise
+};
+let validNum =/^[0-9]+$/;//creating a variable to hold valid numbers using regex
+
+function isCcardValid(){
+  //chesks if credit card number is valid
+  let $cCardNum = $('#cc-num').val();
+  let $zipNum = $('#zip').val();
+  let $cvvNum = $('#cvv').val();
+  return ($cCardNum.match(validNum) && 13 <= $cCardNum.length && $cCardNum.length <= 16 &&//chesks if credit card number is valid
+          $zipNum.match(validNum) && $zipNum.length === 5 &&//checks if zip code is valid
+          $cvvNum.match(validNum) && $cvvNum.length === 3) ? true:false;// //chesks if cvvnumber is valid
+};
