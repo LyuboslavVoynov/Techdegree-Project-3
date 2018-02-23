@@ -9,6 +9,9 @@ const $creditCardP = $("#credit-card");//credit card text field
 const $payPalP = $('div p:first');//paypal paragraph
 const $bitCoinP = $('div p:last');//bitcoin paragraph
 const $payInfo = $('#cc-num,#zip,#cvv');//cc num, zip, cvv text fields
+const $cCardNum = $('#cc-num');//cc number
+const $zipNum = $('#zip'); //zip num
+const $cvvNum = $('#cvv');// cvv number
 const $activities = $('.activities input');//creating a variable for the activities from the checkboxes.
 const $colors = $("#colors-js-puns");// color options
 const $payVal = $("#payment");//payment options
@@ -193,40 +196,115 @@ $payVal.change(function(){
 //submit event handler
 $('button[type=submit]').click(function(){
     isValid(event);
+
 });
 
 //creating a function to check if all information is valid
+
 function isValid(event){
+  // form valid by default
+   let invalid = false;
+   //resetting page styles
+   validStyle($email);
+   validStyle($name);
+   validStyle($activities);
+   validStyle($payInfo);
+   validStyle($cCardNum);
+   validStyle($zipNum);
+   validStyle($cvvNum);
 
- // form valid by default
-  let invalid = false;
-  //resetting page styles
-  validStyle($email);
-  validStyle($name);
-  validStyle($activities);
-  validStyle($payInfo);
+   if (!isNameEntered($name)) {
+       invalidStyle($name);
+       invalid = true;
+  }
+  $name.bind( "input", function() {
+     if (!isNameEntered($name)) {
+       invalidStyle($name);
+       invalid = true;
+     }else{
+       validStyle($name);
+       ivalid = false;
+     }
+   });
 
-  if (!isNameEntered($name)) {
-      invalidStyle($name);
-  		invalid = true;
-
-
-	}
-	if (!isMailValid($email)) {
+  if (!isMailValid($email)) {
       invalidStyle($email);
-  		invalid = true;
-	}
+      invalid = true;
+  }
+
+ $email.bind( "input", function() {
+    if (!isMailValid($email)) {
+      invalidStyle($email);
+      invalid = true;
+    }else{
+      validStyle($email);
+      ivalid = false;
+    }
+  });
+
   if (!activitySelected()){
       invalidStyle($activities);
       invalid = true;
   }
+  $activities.bind( "click", function() {
+     if (!activitySelected($activities)) {
+       invalidStyle($activities);
+       invalid = true;
+     }else{
+       validStyle($activities);
+       ivalid = false;
+     }
+   });
+
   if ($payVal.val() === '"select_method"'){
       invalid = true;
   }
-  if (($payVal.val() === "credit card") && !isCcardValid()){
-      invalidStyle($payInfo);
+
+  if (($payVal.val() === "credit card") && !isCcNumValid()){
+      invalidStyle($cCardNum);
       invalid = true;
   }
+
+  $cCardNum.bind( "input", function() {
+     if (!isCcNumValid($cCardNum)) {
+       invalidStyle($cCardNum);
+       invalid = true;
+     }else{
+       validStyle($cCardNum);
+       ivalid = false;
+     }
+   });
+
+  if (($payVal.val() === "credit card") && !isZipValid()){
+      invalidStyle($zipNum);
+      invalid = true;
+  }
+
+  $zipNum.bind( "input", function() {
+     if (!isZipValid($zipNum)) {
+       invalidStyle($zipNum);
+       invalid = true;
+     }else{
+       validStyle($zipNum);
+       ivalid = false;
+     }
+   });
+
+  if (($payVal.val() === "credit card") && !isCvvValid()){
+      invalidStyle($cvvNum);
+      invalid = true;
+  }
+
+  $cvvNum.bind( "input", function() {
+     if (!isCvvValid($cvvNum)) {
+       invalidStyle($cvvNum);
+       invalid = true;
+     }else{
+       validStyle($cvvNum);
+       ivalid = false;
+     }
+   });
+
   if (invalid){
       event.preventDefault();
       $(window).scrollTop($('.container'));
@@ -234,6 +312,7 @@ function isValid(event){
   }
 
 };
+
 
 //input invalid  css styles
 function invalidStyle(arg){
@@ -268,13 +347,16 @@ function activitySelected() {
 	return (activitiesNum>0) ? true:false;//returns true if valid ,false otherwise
 };
 let validNum =/^[0-9]+$/;//creating a variable to hold valid numbers using regex
-
-function isCcardValid(){
+function isCcNumValid(){
   //chesks if credit card number is valid
-  let $cCardNum = $('#cc-num').val();
-  let $zipNum = $('#zip').val();
-  let $cvvNum = $('#cvv').val();
-  return ($cCardNum.match(validNum) && 13 <= $cCardNum.length && $cCardNum.length <= 16 &&//chesks if credit card number is valid
-          $zipNum.match(validNum) && $zipNum.length === 5 &&//checks if zip code is valid
-          $cvvNum.match(validNum) && $cvvNum.length === 3) ? true:false;// //chesks if cvvnumber is valid
+  return ($cCardNum.val().match(validNum) && 13 <= $cCardNum.val().length && $cCardNum.val().length <= 16) ? true:false;//chesks if credit card number is valid
+
 };
+
+function isZipValid(){
+  return ($zipNum.val().match(validNum) && $zipNum.val().length === 5) ? true:false;//checks if zip code is valid
+}
+
+function isCvvValid(){
+  return ($cvvNum.val().match(validNum) && $cvvNum.val().length === 3) ? true:false;//chesks if cvvnumber is valid
+}
