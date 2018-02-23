@@ -16,6 +16,7 @@ const $activities = $('.activities input');//creating a variable for the activit
 const $colors = $("#colors-js-puns");// color options
 const $payVal = $("#payment");//payment options
 
+
 //BASIC INFO
 // gives focus to the first text field,when the page loads
 $(function() {
@@ -193,8 +194,10 @@ $payVal.change(function(){
 
 });
 
+
 //submit event handler
 $('button[type=submit]').click(function(){
+
     isValid(event);
 
 });
@@ -205,19 +208,65 @@ function isValid(event){
   // form valid by default
    let invalid = false;
    //resetting page styles
-   validStyle($email);
-   validStyle($name);
-   validStyle($activities);
-   validStyle($payInfo);
-   validStyle($cCardNum);
-   validStyle($zipNum);
-   validStyle($cvvNum);
-
+   validatePage();
+//cheks and prevents the page from submiting if any of the values entered is incorrect
+//applys css error style for the incorrect input fields
    if (!isNameEntered($name)) {
        invalidStyle($name);
        invalid = true;
   }
+  if (!isMailValid($email)) {
+      invalidStyle($email);
+      invalid = true;
+  }
+  if (!activitySelected()){
+      invalidStyle($activities);
+      invalid = true;
+  }
+  if ($payVal.val() === '"select_method"'){
+      invalid = true;
+  }
+  if (($payVal.val() === "credit card") && !isCcNumValid()){
+
+      invalidStyle($cCardNum);
+      invalid = true;
+  }
+  if (($payVal.val() === "credit card") && !isZipValid()){
+
+      invalidStyle($zipNum);
+      invalid = true;
+  }
+  if (($payVal.val() === "credit card") && !isCvvValid()){
+
+      invalidStyle($cvvNum);
+      invalid = true;
+  }
+  if (invalid){
+      event.preventDefault();
+      $(window).scrollTop($('.container'));
+  }
+};
+// resetting
+function validatePage(){
+  return $email.removeAttr('class')
+         $name.removeAttr('class')
+         $activities.removeAttr('class')
+         $payInfo.removeAttr('class');
+}
+//input invalid  css styles
+function invalidStyle(arg){
+  return arg.attr('class','inputError')
+}
+//input valid css styles
+function validStyle(arg){
+  return arg.attr('class', '');
+}
+
+// creates real time validation (applys red box around the incorrect input fields)
+function invalidInput(){
+  let invalid = false;
   $name.bind( "input", function() {
+
      if (!isNameEntered($name)) {
        invalidStyle($name);
        invalid = true;
@@ -226,27 +275,18 @@ function isValid(event){
        ivalid = false;
      }
    });
+   $email.bind( "input", function() {
 
-  if (!isMailValid($email)) {
-      invalidStyle($email);
-      invalid = true;
-  }
-
- $email.bind( "input", function() {
-    if (!isMailValid($email)) {
-      invalidStyle($email);
-      invalid = true;
-    }else{
-      validStyle($email);
-      ivalid = false;
-    }
-  });
-
-  if (!activitySelected()){
-      invalidStyle($activities);
-      invalid = true;
-  }
+      if (!isMailValid($email)) {
+        invalidStyle($email);
+        invalid = true;
+      }else{
+        validStyle($email);
+        ivalid = false;
+      }
+    });
   $activities.bind( "click", function() {
+
      if (!activitySelected($activities)) {
        invalidStyle($activities);
        invalid = true;
@@ -255,17 +295,8 @@ function isValid(event){
        ivalid = false;
      }
    });
-
-  if ($payVal.val() === '"select_method"'){
-      invalid = true;
-  }
-
-  if (($payVal.val() === "credit card") && !isCcNumValid()){
-      invalidStyle($cCardNum);
-      invalid = true;
-  }
-
   $cCardNum.bind( "input", function() {
+
      if (!isCcNumValid($cCardNum)) {
        invalidStyle($cCardNum);
        invalid = true;
@@ -274,13 +305,8 @@ function isValid(event){
        ivalid = false;
      }
    });
-
-  if (($payVal.val() === "credit card") && !isZipValid()){
-      invalidStyle($zipNum);
-      invalid = true;
-  }
-
   $zipNum.bind( "input", function() {
+
      if (!isZipValid($zipNum)) {
        invalidStyle($zipNum);
        invalid = true;
@@ -289,13 +315,8 @@ function isValid(event){
        ivalid = false;
      }
    });
-
-  if (($payVal.val() === "credit card") && !isCvvValid()){
-      invalidStyle($cvvNum);
-      invalid = true;
-  }
-
   $cvvNum.bind( "input", function() {
+
      if (!isCvvValid($cvvNum)) {
        invalidStyle($cvvNum);
        invalid = true;
@@ -304,25 +325,12 @@ function isValid(event){
        ivalid = false;
      }
    });
-
-  if (invalid){
-      event.preventDefault();
-      $(window).scrollTop($('.container'));
-
+   if (invalid){
+       event.preventDefault();
+       $(window).scrollTop($('.container'));
   }
-
-};
-
-
-//input invalid  css styles
-function invalidStyle(arg){
-  return arg.css("box-shadow", "0 0 5px 1px red");
 }
-//input valid css styles
-function validStyle(arg){
-  return arg.css('box-shadow', '');
-}
-
+invalidInput();
 //FORM VALIDATION CHECK FUNCTIONS
 
 //checks if name field is not empty
