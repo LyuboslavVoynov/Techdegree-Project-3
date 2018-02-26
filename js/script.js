@@ -1,5 +1,5 @@
 
-//still working on it, trying to use jQuery for this project
+
 //creating constants
 const $name = $('#name');//name
 const $email = $('#mail');//email
