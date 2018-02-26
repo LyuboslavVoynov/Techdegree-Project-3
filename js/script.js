@@ -3,6 +3,7 @@
 //creating constants
 const $name = $('#name');//name
 const $email = $('#mail');//email
+const $jobRole = $('#title');//job roles
 const $otherTitle = $('#other-title');//other job field
 const $creditCard = $("#payment option[value='credit card']");//credit card
 const $creditCardP = $("#credit-card");//credit card text field
@@ -28,11 +29,8 @@ $otherTitle.hide()
 //Text field that will be revealed when the "Other" option is selected from the "Job Role" drop down menu.
 
 $('#title').change(function() {
-  attrNotReq($otherTitle);//other title field not required
-  let $jobRole = $(this).val();
-  if($jobRole === 'other'){
+  if($jobRole.val() === 'other'){
     $otherTitle.show()
-    attrReq($otherTitle);//setting the other title field as required
   }else {
     $otherTitle.hide(); //hiding other title field
   }
@@ -54,7 +52,7 @@ $('#design').change(function(){
 
 
   if($themeValue === 'Select Theme'){
-     //showing all the colors when 'Select Theme' is selected
+     //hiding all the colors when 'Select Theme' is selected
       $colors.hide();
 
     } else if($themeValue === 'js puns'){
@@ -202,8 +200,18 @@ $('button[type=submit]').click(function(){
 
 });
 
-//creating a function to check if all information is valid
+// ERROR SPAN
+let $mailSpan = $('.mail-error');//mail error span
+let $cCardSpan = $('.col-6 span')// cCard error span
+let $zipSpan = $('.col-3 span:first')// zip error span
+let $cvvSpan = $('.col-3 span:last')//cvv error span
+$('.credit-card span').hide();//hiding credit card error spans
+$mailSpan.hide();//hidding mail error spans
 
+
+
+//VALIDATION
+//creating a function to check if all information is valid
 function isValid(event){
   // form valid by default
    let invalid = false;
@@ -223,35 +231,40 @@ function isValid(event){
       invalidStyle($activities);
       invalid = true;
   }
-  if ($payVal.val() === '"select_method"'){
+  if ($payVal.val() === "select_method"){
       invalid = true;
   }
   if (($payVal.val() === "credit card") && !isCcNumValid()){
-
+      $cCardSpan.show();
       invalidStyle($cCardNum);
       invalid = true;
   }
   if (($payVal.val() === "credit card") && !isZipValid()){
-
+      $zipSpan.show();
       invalidStyle($zipNum);
       invalid = true;
   }
   if (($payVal.val() === "credit card") && !isCvvValid()){
-
+      $cvvSpan.show();
       invalidStyle($cvvNum);
       invalid = true;
+  }
+  if ($jobRole.val()=== 'other' && $otherTitle.val() === ''){
+     invalidStyle($otherTitle);
+     invalid = true;
   }
   if (invalid){
       event.preventDefault();
       $(window).scrollTop($('.container'));
   }
 };
-// resetting
+// resetting page styles
 function validatePage(){
-  return $email.removeAttr('class')
-         $name.removeAttr('class')
-         $activities.removeAttr('class')
+  return $email.removeAttr('class');
+         $name.removeAttr('class');
+         $activities.removeAttr('class');
          $payInfo.removeAttr('class');
+         $otherTitle.removeAttr('class');
 }
 //input invalid  css styles
 function invalidStyle(arg){
@@ -262,6 +275,7 @@ function validStyle(arg){
   return arg.attr('class', '');
 }
 
+//REAL TIME VALIDATION
 // creates real time validation (applys red box around the incorrect input fields)
 function invalidInput(){
   let invalid = false;
@@ -278,13 +292,21 @@ function invalidInput(){
    $email.bind( "input", function() {
 
       if (!isMailValid($email)) {
-        invalidStyle($email);
+        $mailSpan.show();//creates a real time error message  if mail is incorrect format
+       invalidStyle($email);
         invalid = true;
       }else{
+        $mailSpan.hide();
         validStyle($email);
-        ivalid = false;
+        invalid = false;
       }
     });
+
+  $otherTitle.bind('input', function(){
+      validStyle($otherTitle);
+      invalid = false;
+    })
+  //makes all checkboxes red if none selected
   $activities.bind( "click", function() {
 
      if (!activitySelected($activities)) {
@@ -301,6 +323,7 @@ function invalidInput(){
        invalidStyle($cCardNum);
        invalid = true;
      }else{
+       $cCardSpan.hide();
        validStyle($cCardNum);
        ivalid = false;
      }
@@ -311,6 +334,7 @@ function invalidInput(){
        invalidStyle($zipNum);
        invalid = true;
      }else{
+       $zipSpan.hide();
        validStyle($zipNum);
        ivalid = false;
      }
@@ -321,6 +345,7 @@ function invalidInput(){
        invalidStyle($cvvNum);
        invalid = true;
      }else{
+       $cvvSpan.hide();
        validStyle($cvvNum);
        ivalid = false;
      }
@@ -330,6 +355,7 @@ function invalidInput(){
        $(window).scrollTop($('.container'));
   }
 }
+//calling real time validation function
 invalidInput();
 //FORM VALIDATION CHECK FUNCTIONS
 
@@ -357,7 +383,7 @@ function activitySelected() {
 let validNum =/^[0-9]+$/;//creating a variable to hold valid numbers using regex
 function isCcNumValid(){
   //chesks if credit card number is valid
-  return ($cCardNum.val().match(validNum) && 13 <= $cCardNum.val().length && $cCardNum.val().length <= 16) ? true:false;//chesks if credit card number is valid
+  return ($cCardNum.val().match(validNum) && 13 <= $cCardNum.val().length && $cCardNum.val().length <= 16) ? true:false;
 
 };
 
