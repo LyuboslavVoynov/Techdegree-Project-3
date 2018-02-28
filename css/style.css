@@ -69,10 +69,6 @@ input[type="email"],
 legend {
 	width: 100%;
 }
-.inputError{
-  box-shadow:0 0 5px 1px red;
-}
-
 
 
 label {
@@ -147,6 +143,11 @@ button:hover {
 .credit-card {
 	margin-top: 1.25em;
 }
+
+.inputError{
+  box-shadow:0 0 5px 1px red;
+}
+
 
 
 /* =================================
