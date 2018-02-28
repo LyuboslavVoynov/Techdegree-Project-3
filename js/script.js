@@ -1,5 +1,4 @@
 
-
 //creating constants
 const $name = $('#name');//name
 const $email = $('#mail');//email
@@ -16,7 +15,6 @@ const $cvvNum = $('#cvv');// cvv number
 const $activities = $('.activities input');//creating a variable for the activities from the checkboxes.
 const $colors = $("#colors-js-puns");// color options
 const $payVal = $("#payment");//payment options
-
 
 //BASIC INFO
 // gives focus to the first text field,when the page loads
@@ -200,15 +198,6 @@ $('button[type=submit]').click(function(){
 
 });
 
-// ERROR SPAN
-let $mailSpan = $('.mail-error');//mail error span
-let $cCardSpan = $('.col-6 span')// cCard error span
-let $zipSpan = $('.col-3 span:first')// zip error span
-let $cvvSpan = $('.col-3 span:last')//cvv error span
-$('.credit-card span').hide();//hiding credit card error spans
-$mailSpan.hide();//hidding mail error spans
-
-
 
 //VALIDATION
 //creating a function to check if all information is valid
@@ -235,17 +224,14 @@ function isValid(event){
       invalid = true;
   }
   if (($payVal.val() === "credit card") && !isCcNumValid()){
-      $cCardSpan.show();
       invalidStyle($cCardNum);
       invalid = true;
   }
-  if (($payVal.val() === "credit card") && !isZipValid()){
-      $zipSpan.show();
+  if (($payVal.val() === "credit card") && !isZipValid()){;
       invalidStyle($zipNum);
       invalid = true;
   }
   if (($payVal.val() === "credit card") && !isCvvValid()){
-      $cvvSpan.show();
       invalidStyle($cvvNum);
       invalid = true;
   }
@@ -292,11 +278,9 @@ function invalidInput(){
    $email.bind( "input", function() {
 
       if (!isMailValid($email)) {
-        $mailSpan.show();//creates a real time error message  if mail is incorrect format
        invalidStyle($email);
         invalid = true;
       }else{
-        $mailSpan.hide();
         validStyle($email);
         invalid = false;
       }
@@ -323,7 +307,6 @@ function invalidInput(){
        invalidStyle($cCardNum);
        invalid = true;
      }else{
-       $cCardSpan.hide();
        validStyle($cCardNum);
        ivalid = false;
      }
@@ -334,7 +317,6 @@ function invalidInput(){
        invalidStyle($zipNum);
        invalid = true;
      }else{
-       $zipSpan.hide();
        validStyle($zipNum);
        ivalid = false;
      }
@@ -345,7 +327,6 @@ function invalidInput(){
        invalidStyle($cvvNum);
        invalid = true;
      }else{
-       $cvvSpan.hide();
        validStyle($cvvNum);
        ivalid = false;
      }
